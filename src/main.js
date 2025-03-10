@@ -124,6 +124,7 @@ require(["websockets/binary_websockets", "text!./oauth/app_id.json"]);
 /* example: load_ondemand(li,"click","tradingtimes/tradingtimes",callback) */
 function load_ondemand(element, event_name, msg, module_name, callback) {
     var func_name = null;
+    console.log("load_ondemand")
     element.one(event_name, func_name = function() {
 
         //Ignore click event, if it has disabled class
@@ -147,6 +148,7 @@ function load_ondemand(element, event_name, msg, module_name, callback) {
 var i18n_name = (window.local_storage.get("i18n") || { value: "en" }).value;
 require(["jquery", "text!i18n/" + i18n_name + ".json"], function($, lang_json) {
     "use strict";
+    console.log("il8n_name")
     /* setup translating string literals */
     window.setupi18nTranslation(JSON.parse(lang_json));
 
@@ -168,12 +170,12 @@ require(["jquery", "text!i18n/" + i18n_name + ".json"], function($, lang_json) {
         // "css!charts/charts.css"]);
 
     function handle_normal_route() {
-
+        console.log("handle_normal_route")
         /* We do not allow entire webtrader.binary.com to be included in IFRAME */
-        if (self !== top) {
-            top.location = self.location;
-            return;
-        }
+        // if (self !== top) {
+        //     top.location = self.location;
+        //     return;
+        // }
 
         /* this callback is executed right after the navigation module
            has been loaded & initialized. register your menu click handlers here */
@@ -270,24 +272,25 @@ require(["jquery", "text!i18n/" + i18n_name + ".json"], function($, lang_json) {
         };
         
         require(["navigation/navigation", "websockets/binary_websockets", "jquery-ui", "css!main.css","css!binary-style"], function(navigation, websockets) {
-            var shouldRedirectMf = function(client_country, auth) {
-                var account_list = auth.account_list;
-                var residence_country = auth.country;
-                var has_mf_mx_mlt = false;
-                account_list.forEach(function(account) {
-                    if (account.landing_company_name === 'maltainvest' 
-                        || account.landing_company_name === 'malta'
-                        || account.landing_company_name === 'iom') 
-                    {
-                        has_mf_mx_mlt = true;
-                        return;
-                    }
-                });
-                return (has_mf_mx_mlt || ((isEuCountrySelected(client_country) || isEuCountrySelected(residence_country)) && account_list.length == 1))
-            }
-            var showMainContent = function () {
+            console.log("navigation")
+            // var shouldRedirectMf = function(client_country, auth) {
+            //     var account_list = auth.account_list;
+            //     var residence_country = auth.country;
+            //     var has_mf_mx_mlt = false;
+            //     account_list.forEach(function(account) {
+            //         if (account.landing_company_name === 'maltainvest' 
+            //             || account.landing_company_name === 'malta'
+            //             || account.landing_company_name === 'iom') 
+            //         {
+            //             has_mf_mx_mlt = true;
+            //             return;
+            //         }
+            //     });
+            //     return (has_mf_mx_mlt || ((isEuCountrySelected(client_country) || isEuCountrySelected(residence_country)) && account_list.length == 1))
+            // }
+            function abc () {
                 navigation.init(registerMenusCallback);
-        
+                console.log("showMainContent")
                 /* initialize the top menu because other dialogs
                  * will assume an initialized top menu */
                 $("#menu").menu();
@@ -302,11 +305,12 @@ require(["jquery", "text!i18n/" + i18n_name + ".json"], function($, lang_json) {
     
                 //Trigger async loading of window sub-menu
                 require(["windows/windows"], function(windows) {
+                    console.log("windows")
                     var $windowsLI = $("#nav-menu .windows");
                     windows.init($windowsLI);
                     // hide the main loading spinner,
                     // after the `last module` has been loaded.
-                    $(".sk-spinner-container").parent().hide();
+                    // $(".sk-spinner-container").parent().hide();
                     $("body > .footer").show();
                 });
     
@@ -314,20 +318,21 @@ require(["jquery", "text!i18n/" + i18n_name + ".json"], function($, lang_json) {
                     banner.init();
                 });
             };
+            abc();
 
-            websockets
-            .send({ website_status: 1 })
-            .then(function(data) {
-                var client_country = data.website_status.clients_country;
-                if (!local_storage.get('oauth')) {
-                    window.location.href = moveToDerivUrl();
-                } else {
-                    websockets.cached.authorize().then(function(auth) {
-                        window.location.href = moveToDerivUrl();
-                    })
-                }
+            // websockets
+            // .send({ website_status: 1 })
+            // .then(function(data) {
+            //     var client_country = data.website_status.clients_country;
+            //     if (!local_storage.get('oauth')) {
+            //         window.location.href = moveToDerivUrl();
+            //     } else {
+            //         websockets.cached.authorize().then(function(auth) {
+            //             window.location.href = moveToDerivUrl();
+            //         })
+            //     }
                 
-            })
+            // })
         });
 
         /*Trigger T&C check, self-exclusion, reality check, csr_tax_information check*/

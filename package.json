@@ -38,8 +38,7 @@
     "grunt-sass": "^3.1.0",
     "grunt-shell": "^1.1.2",
     "grunt-text-replace": "^0.4.0",
-    "lodash": "^4.17.19",
-    "node-sass": "^4.5.3"
+    "lodash": "^4.17.19"
   },
   "scripts": {
     "deploy-ci": "grunt",
@@ -95,6 +94,7 @@
     "require-css": "^0.1.10",
     "requirejs-text": "^2.0.16",
     "rivets": "0.8.1",
+    "sass": "^1.85.1",
     "vanderlee-colorpicker": "^1.2.13"
   }
 }

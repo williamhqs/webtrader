@@ -5,7 +5,7 @@ var footer_non_eu_el = document.getElementById('footer-non-eu');
 
 var href = window.location.href;
 var default_app_id = 11;
-
+console.log(href)
 // Remove the '#' check later once the backend changes are released TODO
 var params_str = href.indexOf('#') != -1 ? href.split('#')[1] : href.split('?')[1];
 var lang = (params_str && params_str.match(/lang=[a-zA-Z]+/g) || []).map(function (val) { return val.split('=')[1] })[0] ||
@@ -13,13 +13,14 @@ var lang = (params_str && params_str.match(/lang=[a-zA-Z]+/g) || []).map(functio
 
 contact_us_el.href = getBinaryUrl('contact.html');
 logo_el.href = getBinaryUrl('home.html');
-
-checkRedirectToken(params_str);
+console.log("this is index.js abc")
+console.log(params_str)
+// checkRedirectToken(params_str);
 
 setLanguage(lang);
 clearUrlQuerystring(href);
 
-checkWindowSize();
+// checkWindowSize();
 
 processPageLanguage();
 
@@ -41,22 +42,27 @@ function processRedirect(selected_language_name) {
         var client_country;
         var account_list;
         var app_id = err ? default_app_id : getAppId(app_id_json);
+        console.log(app_id)
         var api_url = getUrl() + '?l=' + selected_language_name + '&app_id=' + app_id + '&brand=binary';
-        var ws = new WebSocket(api_url);
-        ws.onopen = sendWebsiteStatus;
-        ws.onmessage = processApiResponse;
+        console.log(api_url)
+        // var ws = new WebSocket(api_url);
+        // ws.onopen = sendWebsiteStatus;
+        // console.log(sendWebsiteStatus)
+        // console.log("abc")
+        // ws.onmessage = processApiResponse;
+        has_mf_mx_mlt = true;
+        // processApiResponse()
+        // function getAppId(app_id_json) {
+        //     var stored_app_id = '';
 
-        function getAppId(app_id_json) {
-            var stored_app_id = '';
+        //     for(var url in app_id_json) {
+        //         if(href.lastIndexOf(url, 0) === 0) {
+        //             stored_app_id = app_id_json[url];
+        //         }
+        //     }
 
-            for(var url in app_id_json) {
-                if(href.lastIndexOf(url, 0) === 0) {
-                    stored_app_id = app_id_json[url];
-                }
-            }
-
-            return stored_app_id || default_app_id;
-        }
+        //     return stored_app_id || default_app_id;
+        // }
         getUrl();
 
         function sendApiRequest(request) {
@@ -72,38 +78,45 @@ function processRedirect(selected_language_name) {
         }
         
         function processApiResponse(response) {
-            var data = JSON.parse(response.data);
-
+            console.log("processApiResponse")
+            // var data = JSON.parse(response.data);
+            has_mf_mx_mlt = true;
+                        return;
+            // console.log(response.data)
             if(data.website_status){
                 client_country = data.website_status.clients_country;
+                console.log(client_country)
                 if (local_storage.get('oauth')) {
+                    console.log("get oauth")
                     var token = local_storage.get('oauth')[0].token;
                     sendAuthorize(token);
                 } else {
+                    console.log("not get oauth")
                     window.location.href = moveToDerivUrl();
                 }
             } else if (data.authorize){
                 account_list = data.authorize.account_list;
                 var has_mf_mx_mlt = false;
-                for (var account in account_list){
-                    if (account.landing_company_name === 'maltainvest' 
-                        || account.landing_company_name === 'malta' 
-                        || account.landing_company_name === 'iom')
-                    {
+                // for (var account in account_list){
+                //     if (account.landing_company_name === 'maltainvest' 
+                //         || account.landing_company_name === 'malta' 
+                //         || account.landing_company_name === 'iom')
+                //     {
                         has_mf_mx_mlt = true;
                         return;
-                    }
-                }
-                window.location.href = moveToDerivUrl();
+                //     }
+                // }
+                // window.location.href = moveToDerivUrl();
             }
         }
     })
 }
 function processPageLanguage() {
+    console.log("processPageLanguage")
     var selected_language_name = (window.local_storage.get('i18n') || { value: 'en' }).value;
 
     populateLanguageDropdown();
-    processRedirect(selected_language_name);
+    // processRedirect(selected_language_name);
 
     function populateLanguageDropdown() {
         var language_arr = getSupportedLanguages();
@@ -140,31 +153,9 @@ function onChangeSelectLanguage(selected_language_name) {
     });
 }
 
-function checkRedirectToken(params_str) {
-    if (/acct1=/.test(href) && /token1=/.test(href)) {
-        var accts = matchRegex(/acct\d=[\w\d]+/g);
-        var tokens = matchRegex(/token\d=[\w\d-]+/g);
-        var currs = matchRegex(/cur\d=[\w\d]+/g);
-        var oauth = [];
-
-        for (var i = 0; i < accts.length; i++) {
-            var id = accts[i];
-            var token = tokens[i];
-            var curr = currs[i];
-            oauth.push({ id: id, token: token, currency: curr });
-        }
-        local_storage.set('oauth', oauth);
-        local_storage.set('oauth-login', { value: true }); /* used to fire oauth-login event in binary_websockets.js */
-
-        function matchRegex(regex) {
-            return (params_str.match(regex) || []).map(function (val) { return val.split('=')[1] })
-        }
-    }
-}
-
 function checkWindowSize() {
     if (isSmallView()) {
-        window.location.href = moveToDerivUrl();
+        // window.location.href = moveToDerivUrl();
         return;
     }
 }
@@ -183,9 +174,9 @@ function processFooter(selected_language_name) {
         var clients_country;
         var app_id = err ? default_app_id : getAppId(app_id_json);
         var api_url = getUrl() + '?l=' + selected_language_name + '&app_id=' + app_id + '&brand=binary';
-        var ws = new WebSocket(api_url);
-        ws.onopen = sendWebsiteStatus;
-        ws.onmessage = processApiResponse;
+        // var ws = new WebSocket(api_url);
+        // ws.onopen = sendWebsiteStatus;
+        // ws.onmessage = processApiResponse;
 
         function getAppId(app_id_json) {
             var stored_app_id = '';
@@ -218,12 +209,12 @@ function processFooter(selected_language_name) {
 
             if (data.error) return;
 
-            if (data.website_status) {
-                clients_country = data.website_status.clients_country;
-                sendLandingCompany(clients_country);
-            } else if (data.landing_company) {
+            // if (data.website_status) {
+            //     clients_country = data.website_status.clients_country;
+            //     sendLandingCompany(clients_country);
+            // } else if (data.landing_company) {
                 populateFooter(data);
-            }
+            // }
 
             function populateFooter(data) {
                 var binary_responsible_trading_url = getBinaryUrl('responsible-trading.html');

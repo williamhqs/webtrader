@@ -512,7 +512,7 @@ function getBinaryUrl(page) {
     var hostname = new URL(window.location.href).hostname;
     var lang = (local_storage.get('i18n') || {value: 'en'}).value;
     var domain = hostname.includes('binary.me') ? '.me' : '.com';
-    var binary_url = 'https://binary' + domain + '/' + lang + '/' + page;
+    var binary_url = 'http://locahost:9001'+ '/' + lang + '/' + page;
 
     return binary_url;
 }

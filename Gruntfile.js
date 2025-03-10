@@ -1,5 +1,5 @@
 "use strict";
-const sass = require('node-sass');
+const sass = require('sass');
 
 module.exports = function (grunt) {
 
@@ -374,7 +374,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask("mainTask", ["clean:compressed","clean:uncompressed", "copy:main", "sass", "babel", "copy:copy_i18n", "copy:copyLibraries", "rename", "replace:version"]);
-    grunt.registerTask("compressionAndUglify", ["cssmin", "htmlmin", "imagemin", "uglify", "copy:copy_AfterCompression"]);
+    grunt.registerTask("compressionAndUglify", ["cssmin", "htmlmin", "uglify", "copy:copy_AfterCompression"]);
     grunt.registerTask("default", ["jshint", "po2json", "mainTask", "compressionAndUglify", "removelogging"]);
 
     //Meant for local development use ONLY - for pushing to individual forks
